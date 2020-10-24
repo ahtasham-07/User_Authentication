@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User</title>
+</head>
+
+<body>
+    <div id='b_login'>
+        <h1>Hello World!</h1>
+        <form action="/" method="GET">
+            <p>Type Email: <input type="text" name="mail" /> </p>
+            <input type="submit" />
+        </form>
+    </div>
+
+    <div id='a_login' style="display: none;">
+        <h3>Hello User!</h3>
+        <p id='user'>Sorry, you have to login!</p>
+    </div>
+
+    <script>
+
+        async function user_data() {
+            try {
+                var response = await fetch('http://127.0.0.1:5000/data');
+                var name = await response.text()
+                //Work after login
+                document.getElementById('b_login').style.display = 'none';
+                document.getElementById('a_login').style.display = 'block';
+                document.getElementById('user').innerHTML = name;
+            }
+            catch (e) {
+                alert(e);
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function demo() {
+            while (1 === 1) {
+                var auth_checking = await fetch('http://127.0.0.1:5000/auth_checking');
+                var auth_checking_flag = await auth_checking.text()
+                if (auth_checking_flag === 'True') {
+                    user_data();
+                    var logout = await fetch('http://127.0.0.1:5000/logout')
+                    break;
+                }
+                await sleep(2000);
+            }
+        }
+        demo();
+    </script>
+</body>
+
+</html>
